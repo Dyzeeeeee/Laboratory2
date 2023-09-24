@@ -183,9 +183,6 @@ class MusicController extends BaseController
     public function playlist($playlistName)
     {
 
-
-
-
         $playlist = $this->playlistModel->where('pl_name', $playlistName)->first();
 
         if ($playlist) {
@@ -202,6 +199,7 @@ class MusicController extends BaseController
                 'playlists' => $this->playlistModel->findAll(),
                 'songs' => $songsInPlaylist,
                 'playlistName' => $playlistName,
+                'playlistId' => $playlist['pl_id'], 
             ];
 
             return view('playlist_view', $data);
@@ -210,4 +208,37 @@ class MusicController extends BaseController
             return redirect()->to('/musicplayer')->with('error', 'Playlist not found.');
         }
     }
+
+    public function removeFromPlaylist($musicID, $playlistID)
+    {
+        
+        $playlist = $this->playlistModel->find($playlistID);
+    
+        if (!$playlist) {
+            return redirect()->to('/musicplayer')->with('error', 'Playlist not found.');
+        }
+    
+        
+        $playmusic = $this->playmusicModel
+            ->where('id_ms', $musicID)
+            ->where('id_pl', $playlistID)
+            ->first();
+    
+        if (!$playmusic) {
+            return redirect()->to('/musicplayer')->with('error', 'Song not found in the playlist.');
+        }
+    
+        
+        $this->playmusicModel->delete($playmusic['id']);
+    
+        
+        $playlistName = $playlist['pl_name'];
+    
+        
+        return redirect()->to("/musicplayer/playlist/{$playlistName}")
+            ->with('success', 'Song removed from the playlist.');
+    }
+    
+    
+    
 }

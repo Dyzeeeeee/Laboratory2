@@ -25,15 +25,22 @@
   <!-- Back button -->
 
 
-  <!-- Music list -->
-  <ul id="playlist">
-    <?php foreach ($songs as $song) : ?>
-      <li data-src="<?= base_url($song['ms_path']) ?>">
-        <div class="song-container">
-          <a href="javascript:void(0);" class="song-title"><?= $song['ms_name'] ?></a>
-        </div>
-      </li>
-    <?php endforeach; ?>
-  </ul>
+ <!-- Music list -->
+<ul id="playlist">
+  <?php foreach ($songs as $song) : ?>
+    <li data-src="<?= base_url($song['ms_path']) ?>">
+      <div class="song-container">
+        <a href="javascript:void(0);" class="song-title"><?= $song['ms_name'] ?></a>
+        <form action="<?= base_url('musicplayer/removeFromPlaylist/' . $song['ms_id'] . '/' . $playlistId) ?>" method="post">
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this song from the playlist?')">Remove</button>
+        </form>
+      </div>
+    </li>
+  <?php endforeach; ?>
+</ul>
+
+
+
+
 </body>
 </html>
